@@ -19,7 +19,7 @@ resource "azurerm_virtual_network" "test_vnet" {
 resource "azurerm_subnet" "test_subnet" {
   name                 = "test-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_virtual_network.my_terraform_network.name
+  virtual_network_name = azurerm_virtual_network.test_vnet.name
   address_prefixes     = ["10.0.1.0/24"]
 }
 
@@ -82,7 +82,7 @@ resource "random_id" "random_id" {
 
 # Create storage account for boot diagnostics
 resource "azurerm_storage_account" "test_storage_account" {
-  name                     = "test-storage-accoung_ews"
+  name                     = "test-storage-account-ews"
   location                 = azurerm_resource_group.rg.location
   resource_group_name      = azurerm_resource_group.rg.name
   account_tier             = "Standard"

@@ -82,7 +82,7 @@ resource "random_id" "random_id" {
 
 # Create storage account for boot diagnostics
 resource "azurerm_storage_account" "test_storage_account" {
-  name                     = "test-storage-account-ews"
+  name                     = "teststorageaccountews"
   location                 = azurerm_resource_group.rg.location
   resource_group_name      = azurerm_resource_group.rg.name
   account_tier             = "Standard"
@@ -119,6 +119,6 @@ resource "azurerm_linux_virtual_machine" "test_vm" {
   }
 
   boot_diagnostics {
-    storage_account_uri = azurerm_storage_account.my_storage_account.primary_blob_endpoint
+    storage_account_uri = azurerm_storage_account.test_storage_account.primary_blob_endpoint
   }
 }

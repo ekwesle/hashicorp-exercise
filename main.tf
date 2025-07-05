@@ -4,36 +4,36 @@ resource "random_pet" "rg_name" {
 
 resource "azurerm_resource_group" "rg" {
   location = var.resource_group_location
-  name     = random_pet.rg_name.id
+  name     = "test-rg"
 }
 
 # Create virtual network test1
-resource "azurerm_virtual_network" "my_terraform_network" {
-  name                = "myVnet"
+resource "azurerm_virtual_network" "test_vnet" {
+  name                = "test-vnet"
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 }
 
 # Create subnet
-resource "azurerm_subnet" "my_terraform_subnet" {
-  name                 = "mySubnet"
+resource "azurerm_subnet" "test_subnet" {
+  name                 = "test-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.my_terraform_network.name
   address_prefixes     = ["10.0.1.0/24"]
 }
 
 # Create public IPs
-resource "azurerm_public_ip" "my_terraform_public_ip" {
-  name                = "myPublicIP"
+resource "azurerm_public_ip" "test_public_ip" {
+  name                = "test-PublicIP"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Dynamic"
 }
 
 # Create Network Security Group and rule
-resource "azurerm_network_security_group" "my_terraform_nsg" {
-  name                = "myNetworkSecurityGroup"
+resource "azurerm_network_security_group" "test_nsg" {
+  name                = "test-nsg"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -51,23 +51,23 @@ resource "azurerm_network_security_group" "my_terraform_nsg" {
 }
 
 # Create network interface
-resource "azurerm_network_interface" "my_terraform_nic" {
-  name                = "myNIC"
+resource "azurerm_network_interface" "test_nic" {
+  name                = "test-nic"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
   ip_configuration {
-    name                          = "my_nic_configuration"
-    subnet_id                     = azurerm_subnet.my_terraform_subnet.id
+    name                          = "test_nic_configuration"
+    subnet_id                     = azurerm_subnet.test_subnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.my_terraform_public_ip.id
+    public_ip_address_id          = azurerm_public_ip.test_public_ip.id
   }
 }
 
 # Connect the security group to the network interface
 resource "azurerm_network_interface_security_group_association" "example" {
-  network_interface_id      = azurerm_network_interface.my_terraform_nic.id
-  network_security_group_id = azurerm_network_security_group.my_terraform_nsg.id
+  network_interface_id      = azurerm_network_interface.test_nic.id
+  network_security_group_id = azurerm_network_security_group.test_nsg.id
 }
 
 # Generate random text for a unique storage account name
@@ -81,8 +81,8 @@ resource "random_id" "random_id" {
 }
 
 # Create storage account for boot diagnostics
-resource "azurerm_storage_account" "my_storage_account" {
-  name                     = "diag${random_id.random_id.hex}"
+resource "azurerm_storage_account" "test_storage_account" {
+  name                     = "test-storage-accoung_ews"
   location                 = azurerm_resource_group.rg.location
   resource_group_name      = azurerm_resource_group.rg.name
   account_tier             = "Standard"
@@ -90,15 +90,15 @@ resource "azurerm_storage_account" "my_storage_account" {
 }
 
 # Create virtual machine
-resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
-  name                  = "myVM"
+resource "azurerm_linux_virtual_machine" "test_vm" {
+  name                  = "test-vm"
   location              = azurerm_resource_group.rg.location
   resource_group_name   = azurerm_resource_group.rg.name
-  network_interface_ids = [azurerm_network_interface.my_terraform_nic.id]
+  network_interface_ids = [azurerm_network_interface.test_nic.id]
   size                  = "Standard_B2s"
 
   os_disk {
-    name                 = "myOsDisk"
+    name                 = "test-OsDisk"
     caching              = "ReadWrite"
     storage_account_type = "Premium_LRS"
   }
